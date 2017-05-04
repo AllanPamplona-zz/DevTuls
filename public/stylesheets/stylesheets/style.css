@@ -1,0 +1,23 @@
+footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:77px;
+   width:100%;
+   background:#999;
+
+}
+
+#kanban{
+  margin: : 1000px;
+}
+
+.tab{
+  padding: 15px;
+}
+
+.card{
+  margin: 10px;
+
+  border:white;
+}
