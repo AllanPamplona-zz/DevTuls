@@ -21,7 +21,7 @@ app.post("/login",function(req,res){
     else
 	if(docs!=null){
 	    req.session.user_id=docs._id;
-	    res.redirect("/kanban");
+	    res.redirect("/selector");
 	}
 	else{
 	    res.redirect('/');
