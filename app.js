@@ -9,6 +9,7 @@ var io = require('socket.io')(server);
 var bosy = require("body-parser");
 var cookieSession=require('cookie-session');
 var kanban = require("./controlador/kanban");
+var selector = require("./controlador/selectorProyecto");
 var login = require("./controlador/login");
 var hbs = require('hbs');
 
@@ -31,6 +32,7 @@ app.use(bosy.urlencoded({extended: true}));
 app.use(bosy.json()); //Peticiones json
 app.use(login);
 app.use(kanban);
+app.use(selector);
 
 app.use(cookieSession({name:"session",
     keys:["key1", "key2"]
