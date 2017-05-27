@@ -8,6 +8,7 @@ app.use(cookieSession({name:"session",
 }));
 app.get('/selector', function(req, res){
         console.log(req.session.user_id);
+        console.log(req.session.valor);
         res.render('selector');
 });
 

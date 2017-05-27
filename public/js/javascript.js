@@ -19,7 +19,7 @@ function create(json){
       $("#"+idTableros[j]).append("</br></br>");
     for(i in json){
       if (idTableros[j] == json[i].estado) {
-        $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><p class=\""+json[i]._id+"\">X</p><div class=\"contenido\">"+json[i].contenido+"</div></div></div></div>");
+        $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><p class=\""+json[i]._id+"\">X</p><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
           $('#'+json[i]._id+'').draggable();
       }
     }
