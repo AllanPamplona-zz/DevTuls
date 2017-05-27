@@ -1,17 +1,29 @@
 var auxDrag;
 var urlG = "localhost:3030"
-function update(){
-             $.ajax({
-                url: 'http://'+urlG+'/update',
-                method: 'POST'
-            }).then(function(response){
-                create(response);
-            }).catch(function(err){
-                console.error(err);
-            });
-        }
 
-function create(json){
+function update(){
+    $.ajax({
+        url: 'http://'+urlG+'/update',
+        method: 'POST'
+    }).then(function(response){
+        getId(response);
+    }).catch(function(err){
+        console.error(err);
+    });
+}
+
+function getId(res){
+    $.ajax({
+        url: 'http://'+urlG+'/getid',
+        method: 'POST'
+    }).then(function(response){
+        create(res,response)
+    }).catch(function(err){
+        console.error(err)
+    });
+}
+
+function create(json, res){
   for (var i = 0; i < tableros.length; i++) {
     $("#"+idTableros[i]+"").empty();
   }
@@ -19,19 +31,23 @@ function create(json){
       $("#"+idTableros[j]).append("</br></br>");
     for(i in json){
       if (idTableros[j] == json[i].estado) {
-        $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><p class=\""+json[i]._id+"\">X</p><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
+          if(res!=json[i]._id){
+                $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><p class=\""+json[i]._id+"\">X</p><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
+          }
+          else{
+                $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card amber darken-4 white-text\"><p class=\""+json[i]._id+"\">X</p><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
+          }
           $('#'+json[i]._id+'').draggable();
       }
     }
   }
-
+}
 $("p").click(function(){
     var myclass = {id:$(this).attr("class")};
     erase(myclass);
 });
-};
 
-//Insertar nueva notas
+/*/Insertar nueva nots
 $('#new').on('submit', function(event){
     event.preventDefault();
     var data = {
@@ -47,7 +63,7 @@ $('#new').on('submit', function(event){
         console.error(err);
     });
 });
-
+*/
 
 var socket = io.connect(urlG);
 socket.on('connect', function(data){
@@ -68,11 +84,6 @@ for (var i = 0; i < tableros.length; i++) {
 }
 $(".tab").append("</div>");
 
-//Datos de prueba para llenar las notas
-var jsonp =[
-  {contenido:"tablero1" ,estado:1},
-  {contenido:"tablero2" ,estado:2}
-];
 
 $("#nuevanota0").on('keyup', function(e){
     if(e.keyCode==13){
@@ -175,4 +186,4 @@ $('.contai').droppable({
         actu(data);
     }
 });
-update();
+update()

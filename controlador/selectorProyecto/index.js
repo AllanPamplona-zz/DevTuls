@@ -7,8 +7,9 @@ app.use(cookieSession({name:"session",
     keys:["key1", "key2"]	 
 }));
 app.get('/selector', function(req, res){
-        console.log(req.session.user_id);
-        console.log(req.session.valor);
-        res.render('selector');
+        res.render('selector', {data: [{_id:1, nombre:"hola"},{_id:2,nombre:"adios"}]});
 });
-
+app.post('/seleccionado', function(req,res){
+    req.session.currentproject = req.body.dato;
+    res.send({redirect: '/kanban'})
+});

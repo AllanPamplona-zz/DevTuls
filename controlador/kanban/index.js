@@ -8,14 +8,18 @@ app.use(cookieSession({name:"session",
 }));
 
 app.get('/kanban', function(req, res){
-        console.log(req.session.user_id);
         res.render('kanban');
 });
 
 app.post('/update', function(req, res){
-    db.Tarea.find({ id_usuario:req.session.user_id },function(err,users){
+    db.Tarea.find({id_proyecto:req.session.currentproject },function(err,users){
         res.send(users);
+
     });
+});
+
+app.post('/getid',function(req,res){
+    res.send(req.session.user_id)
 });
 
 app.post('/createtask', function(req , res){
@@ -23,7 +27,8 @@ app.post('/createtask', function(req , res){
         contenido: req.body.contenido,
         fecha : req.body.fecha,
         estado: req.body.estado,
-        id_usuario: req.session.user_id
+        id_usuario: req.session.user_id,
+        id_proyecto: req.session.currentproject
     });
     t.save(function(error, user){
         if(error) {console.log(error);}

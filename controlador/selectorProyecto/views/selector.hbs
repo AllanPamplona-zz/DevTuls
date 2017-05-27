@@ -27,18 +27,16 @@
  </header>
    <!--Tablero-->
    <main>
-     <form class="" action="index.html" method="post">
        <div class="caja">
-         <select class="browser-default ">
+         <select class="browser-default " id="listaselector">
           <option value="" disabled selected>Choose your option</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
+          {{#each data}}
+          <option value={{this._id}}> {{this.nombre}}</option>
+          {{/each}}  
         </select>
 
-        <a class="waves-effect blue lighten-3 z-depth-4 btn boton-selector">button</a>
+        <a id="selectorid" class="waves-effect blue lighten-3 z-depth-4 btn boton-selector">button</a>
     </div>
-  </form>
    </main>
    <!--Footer-->
    <footer class="page-footer blue lighten-3 z-depth-4">
@@ -53,5 +51,6 @@
 <script src='/node1/jquery-ui.min.js'></script>
 <script src='/socket/socket.io.js'></script>
 <script src='/pub/js/javascript.js'></script>
+<script src='/pub/js/selector.js'></script>
     </body>
 </html>
