@@ -105,6 +105,13 @@ $("#nuevanota2").on('keyup', function(e){
         save(comp);
     }
 });
+$(document).ready(function(){
+  $("#dropdown1").click(function(e){
+    var texto = e.target.text;
+    $("#idproyecto").html(texto + '<i class="material-icons right">arrow_drop_down</i>');
+  });
+});
+
 function save(data){
     $.ajax({
         url: "http://"+urlG+"/createtask",
