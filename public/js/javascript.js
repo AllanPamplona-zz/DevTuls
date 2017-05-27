@@ -145,6 +145,7 @@ function erase(data){
 
 
 
+
 //LLena el tablero con las notas
 /**
 for (var i = 0; i < tableros.length; i++) {
