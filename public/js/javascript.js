@@ -106,9 +106,16 @@ $("#nuevanota2").on('keyup', function(e){
     }
 });
 $(document).ready(function(){
+  var texto;
   $("#dropdown1").click(function(e){
-    var texto = e.target.text;
+    texto = e.target.text;
     $("#idproyecto").html(texto + '<i class="material-icons right">arrow_drop_down</i>');
+  });
+  $("#idmiembros").click(function(){
+    texto = $("#idproyecto").text();
+    var aux = "arrow_drop_down";
+    var aux2 = texto.length -aux.length;
+    $("#miembros-proyecto").html(texto.substring(0,aux2));
   });
 });
 
