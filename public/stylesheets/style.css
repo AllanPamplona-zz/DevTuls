@@ -34,3 +34,16 @@ main{
 header{
   z-index:4900;
 }
+
+.caja {
+  height: 12rem;
+  width: 14rem;
+  position: absolute;
+  left: calc(50% - 7rem);
+  top: calc(50% - 6rem);
+ }
+
+ a{
+   margin-top: 5%;
+   left: 20%;
+ }
