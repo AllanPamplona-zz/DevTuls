@@ -12,3 +12,7 @@ $("#selectorid").click(function(){
     });
 });
 
+$(document).ready(function(){
+  var texto;
+  $('.modal').modal();
+});
