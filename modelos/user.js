@@ -3,15 +3,14 @@ var regular=[/^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>
 	var validation_pass= {
 					validator:function(p){
 						return this.password_confirmation == p;
-					}, message:"No son iguales"};
+					}, message:"Las contraseñas no son iguales"};
 
 	//Database Schema and validations
         var Schema  = mongoose.Schema;
 	var user_Schema = new Schema({
 		name:{type:String, required:"El nombre es requerido"},
 		lastname:String,
-		password:{type:String, required:true, minlength:[5, "contraseña muy corta"],
-				validate:validation_pass},
+		password:{type:String, required:true, minlength:[5, "Contraseña muy corta"],validate:validation_pass},
 		email:{type:String, match:regular}
 	});
 

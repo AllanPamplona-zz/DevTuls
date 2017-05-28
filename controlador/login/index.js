@@ -24,8 +24,7 @@ app.post("/login",function(req,res){
 	    res.redirect("/selector");
 	}
 	else{
-	    res.redirect('/');
-	    console.log("Usuario no encontrado");
+	    res.render('login',{res:true});
 	    }
 	})
 })
@@ -33,12 +32,20 @@ app.get("/newUser",function(req,res){ //recibe una peticion get que redirecciona
     res.render("newUser");
 })  
 app.post("/createuser",function(req,res){
-    var user = new db.User({name:req.body.name, lastname:req.body.lastname, password:req.body.password, 
-    password_confirmation:req.body.passwordval, email:req.body.email}); //se reciben parametros JSON para crear nuevo usuario
-    user.save(function(err){ //Se crea un nuevo usuario con el metodo save de la libreria mongoose
-    if(err)
-	console.log(String(err));
-	res.render("login");
+    db.User.find({email:req.body.email},function(err, usuario){    
+        if(usuario.length!=0){
+            res.render("newUser",{res:false})
+        }
+        else{
+            var user = new db.User({name:req.body.name, lastname:req.body.lastname, password:req.body.password, 
+            password_confirmation:req.body.passwordval, email:req.body.email}); //se reciben parametros JSON para crear nuevo usuario
+            user.save(function(err){ //Se crea un nuevo usuario con el metodo save de la libreria mongoose
+            if(err)
+    	        res.render("newUser",{fail:true, str:err});
+            else
+                res.render("login",{creado:true})
+            })
+        }
     })
 })
 
@@ -48,8 +55,6 @@ app.get("/",function(req,res){
     if(req.session!=null){
         res.render("login");
     }
-  //  if(!req.session.user_id)
-//	res.render("/login");
     else
 	res.redirect("/kanban");	
     })

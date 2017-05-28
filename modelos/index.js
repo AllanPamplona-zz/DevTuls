@@ -11,7 +11,7 @@ if(!global.hasOwnProperty('db')){
         // Import el framework como objeto
         mongoose:moongo,
         Tarea: require('./tarea')(moongo),
-
+        Proyecto: require('./proyecto')(moongo),
         User: require('./user')(moongo)
     };
 }

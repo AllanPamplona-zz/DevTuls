@@ -3,6 +3,8 @@
 	<head>
 		<title>Kanban</title>
 		<meta charset="utf-8">
+<script src='/node/jquery.min.js'></script>
+<script src='/node1/jquery-ui.min.js'></script>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="//oss.maxcdn.com/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js">	
@@ -10,7 +12,16 @@
 	</head>
 	<body>
 		<div class="container">
+                    {{#if res}}
 			<h1>Welcome, here you can create a new account</h1>
+                    {{else}}
+                        <h1>El email ya esta en uso</h1>
+                    {{/if}}
+                    {{#if fail}}
+                        <h1>{{str}}</h1>
+                        
+                    {{/if}}
+
 			<form id="loginForm" action="/createuser" method="post">
 				<div class="form-group">
 					<label for="name">Name</label>
