@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="/pub/stylesheets/materialize.min.css">
         <!-- Aquí se ve como usar css desde la carpeta public -->
         <link rel="stylesheet" href="/pub/stylesheets/style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"
     </head>
     <body>
   <!-- Cabecera-->
@@ -25,17 +26,53 @@
       </nav>
    </div>
  </header>
+
    <!--Tablero-->
    <main>
+     <!--Modal crear-->
+     <div id="modal1" class="modal modal-fixed-footer">
+       <div class="modal-content">
+         <label for="nombre">Nombre del proyecto</label>
+         <input placeholder="Nombre del proyecto" id="nombre" type="text" class="validate">
+         <label for="nombre">Agregar miembro</label>
+         <input placeholder="Allan Rodriguez" id="nombre" type="text" class="validate">
+         <ul class="collection">
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+           <li class="collection-item dismissable"><div>Allan</div></li>
+         </ul>
+       </div>
+       <div class="modal-footer">
+         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+          <a href="#!" class="modal-action waves-effect waves-green btn-flat">Agregar usuario</a>
+       </div>
+     </div>
+      </div>
+     <!--Fin modal crear-->
        <div class="caja">
          <select class="browser-default " id="listaselector">
           <option value="" disabled selected>Choose your option</option>
           {{#each data}}
           <option value={{this._id}}> {{this.nombre}}</option>
-          {{/each}}  
+          {{/each}}
         </select>
 
         <a id="selectorid" class="waves-effect blue lighten-3 z-depth-4 btn boton-selector">button</a>
+        <a id="crearid" href="#modal1" class="waves-effect blue lighten-3 z-depth-4 btn boton-selector">Crear</a>
     </div>
    </main>
    <!--Footer-->
@@ -52,5 +89,6 @@
 <script src='/socket/socket.io.js'></script>
 <script src='/pub/js/javascript.js'></script>
 <script src='/pub/js/selector.js'></script>
+<script src='/pub/js/materialize.min.js'></script>
     </body>
 </html>

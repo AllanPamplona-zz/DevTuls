@@ -121,6 +121,7 @@ $("#nuevanota2").on('keyup', function(e){
 });
 $(document).ready(function(){
   var texto;
+  $('.modal').modal();
   $("#dropdown1").click(function(e){
     texto = e.target.text;
     $("#idproyecto").html(texto + '<i class="material-icons right">arrow_drop_down</i>');
