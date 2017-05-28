@@ -13,3 +13,9 @@ app.post('/seleccionado', function(req,res){
     req.session.currentproject = req.body.dato;
     res.send({redirect: '/kanban'})
 });
+app.post('/agregarproyecto', function(req,res){
+   var proyecto = {
+       nombre: req.body.nombre,
+
+   }
+});
