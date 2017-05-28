@@ -31,22 +31,25 @@ function create(json, res){
       $("#"+idTableros[j]).append("</br></br>");
     for(i in json){
       if (idTableros[j] == json[i].estado) {
-          if(res!=json[i]._id){
-                $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><p class=\""+json[i]._id+"\">X</p><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
+          if(res==json[i].id_usuario){
+                $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><div><a id=\""+json[i]._id+"\" class=\"waves-effect waves-light btn nota\"> X </a></div><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
           }
           else{
-                $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card amber darken-4 white-text\"><p class=\""+json[i]._id+"\">X</p><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
+                $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card lime lighten-3 white-text\"><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
           }
           $('#'+json[i]._id+'').draggable();
       }
     }
   }
-}
-$("p").click(function(){
-    var myclass = {id:$(this).attr("class")};
-    erase(myclass);
-});
 
+$("a").click(function(){
+    var clase = $(this).attr("class")
+    if(clase.indexOf("nota")!=-1){
+        var myid = {id:$(this).attr("id")};
+        erase(myid);
+    }
+});
+}
 /*/Insertar nueva nots
 $('#new').on('submit', function(event){
     event.preventDefault();
