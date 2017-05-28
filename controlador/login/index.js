@@ -52,10 +52,15 @@ app.post("/createuser",function(req,res){
 
 app.get("/",function(req,res){
     db.User.find(function(err,doc){
-    if(req.session!=null){
+    if(req.session==null){
         res.render("login");
     }
     else
-	res.redirect("/kanban");	
+        if(req.session.currentproject!=null){
+    	    res.redirect("/kanban");	
+        }
+        else{
+            res.redirect("/selector");
+        }
     })
 })
