@@ -55,8 +55,13 @@ header{
 
  .boton-selector{
    margin-top: 9%;
-   left: 10%;
+   left: 20%;
+   width: 150px;
  }
  .collection-item{
    width: 100%;
+ }
+
+ .modal{
+   z-index: 4900;
  }
