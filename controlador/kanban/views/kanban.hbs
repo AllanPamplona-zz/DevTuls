@@ -17,44 +17,35 @@
       <nav>
         <!--Contenido Dropdown Proyectos-->
         <ul id="dropdown1" class="dropdown-content">
-            <li><a href="#!" id="one">one</a></li>
-            <li><a href="#!" id="two">two</a></li>
-            <li class="divider"></li>
-            <li><a href="#!">Nuevo proyecto</a></li>
         </ul>
         <!--Modal añadir-->
         <div id="modal2" class="modal modal-fixed-footer grey-text darken-3-text">
           <div class="modal-content">
             <label for="nombre">Agregar miembro</label>
-            <input placeholder="Allan Rodriguez" id="nombre" type="text" class="validate">
-            <ul class="collection">
-              <li class="collection-item dismissable"><div>Allan</div></li>
+            <input placeholder="Email" id="email" type="text" class="validate">
+            <ul id="coleccion" class="collection">
             </ul>
           </div>
           <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Aceptar</a>
-             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
-             <a href="#!" class="modal-action waves-effect waves-green btn-flat">Agregar usuario</a>
+            <a href="#!" id="añadir" class="modal-action modal-action waves-effect waves-green btn-flat ">Aceptar</a>
+             <a href="#!" id="closemodal"class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+             <a href="#!" id="agregar" class="modal-action waves-effect waves-green btn-flat">Agregar usuario</a>
           </div>
         </div>
         <!--Contenido Modal Miembros-->
         <div id="modal1" class="modal modal-fixed-footer">
           <div class="modal-content" >
             <h4 id="miembros-proyecto" class="light-blue-text lighten-4-text">Modal Header</h4>
-
+            <h4 id="creador" class="grey-text garlen-3-text"></h4>
             <h6 id="miembros-proyecto" class="grey-text darken-3-text">Miembros</h6>
             <div>
-              <ul class="collection grey-text darken-3-text">
-                  <li class="collection-item "><span class="badge"><button class="botoneliminar">X</button></span>Alvin</li>
-                  <li class="collection-item "><span class="badge">x</span>Alvin</li>
-                  <li class="collection-item "><span class="badge">x</span>Alvin</li>
-                  <li class="collection-item "><span class="badge">x</span>Alvin</li>
-                </ul>
+              <ul id="miembros" class="collection grey-text darken-3-text">
+            </ul>
             </div>
           </div>
           <div class="modal-footer">
-            <a href="#modal2" class="modal-action modal-close waves-effect waves-green btn-flat ">Agregar usuario</a>
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Eliminar proyecto</a>
+            <a id="modal2abrir" href="#modal2" class="modal-action waves-effect waves-green btn-flat ">Agregar usuario</a>
+            <a href="#!" id="remover" class="modal-action waves-effect waves-green btn-flat ">Eliminar proyecto</a>
           </div>
         </div>
 

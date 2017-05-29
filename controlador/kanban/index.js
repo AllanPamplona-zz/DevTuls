@@ -10,14 +10,54 @@ app.use(cookieSession({name:"session",
 app.get('/kanban', function(req, res){
         res.render('kanban');
 });
-
+app.post('/cambiarproyecto', function(req,res){
+    req.session.currentproject=req.body.dato;
+    res.send({redirect:'/kanban'})
+});
 app.post('/update', function(req, res){
     db.Tarea.find({id_proyecto:req.session.currentproject },function(err,users){
         res.send(users);
 
     });
 });
-
+app.post('/agregarmiembros',function(req,res){
+    db.Proyecto.update({_id:req.session.currentproject},{$pushAll:{id_pertenecientes: req.body.pertenece}},{upsert:true}, function(err){
+        if(err){
+            console.log(err)
+            res.send({resultado:"0"})
+        }
+        else{
+            res.send({resultado:"1"})
+        }
+    })
+})
+app.post('/miembrosupdate',function(req,res){
+    db.Proyecto.find({_id:mongoo.Types.ObjectId(req.session.currentproject)},function(err,proy){ 
+        var array = proy[0].id_pertenecientes.map(function(e){return mongoo.Types.ObjectId(e)})
+        db.User.find({ _id:{ $in:array}},function(err,users){
+            db.User.find({_id:mongoo.Types.ObjectId(proy[0].id_creador)},function(err,uss){
+                if(req.session.user_id != proy[0].id_creador){
+                res.send({usuarios:users, propietario:uss, jefe:false})
+                }
+                else{
+                res.send({usuarios:users, propietario:uss, jefe:true})
+                }
+            })
+        });
+    })
+});
+app.post('/borrarmiembro',function(req,res){
+    db.Proyecto.update({_id:mongoo.Types.ObjectId(req.session.currentproject)},{$pullAll: {id_pertenecientes:[req.body.id]}},function(){
+        res.send("1dd")
+    })
+});
+app.post('/deleteproject',function(req,res){
+    db.Proyecto.find({_id:mongoo.Types.ObjectId(req.session.currentproject)}).remove(function(err){
+        if(err){console.log(err)}
+        req.session.currentproject=null;
+        res.send({redirect:'/selector'});
+    });
+});
 app.post('/getid',function(req,res){
     res.send(req.session.user_id)
 });

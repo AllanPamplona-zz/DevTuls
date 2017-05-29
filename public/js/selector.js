@@ -51,23 +51,11 @@ $("#añadir").click(function(){
         });
     }
 })
-function updateselect(){
- $.ajax({
-            url:'http://'+urlG+'/selecupdate',
-            method:'POST'
-        }).then(function(data){
-            $("#listaselector").empty()
-            $("#listaselector").append($('<option>').text("Choose your option").val("disable"))
-            data.proy.forEach(function(x){
-               $("#listaselector").append($('<option>').text(x.nombre).val(x._id)) 
-            })
-        }).catch(function(err){
-            console.error(err)
-        });
-
-}
 $("#agregar").click(function(){
     var data = $('#email').val();
+    if(data.length==0){
+        return
+    }
     $.ajax({
         url: 'http://'+urlG+'/validaremail',
         data: {email:data},
@@ -88,6 +76,9 @@ $("#agregar").click(function(){
 function agregar(json){
     if($('#'+json[0]._id).length==0){
         $("#coleccion").append('<li id='+json[0]._id+' value='+json[0]._id+'><div>'+json[0].name+'</div></li>')
+    }
+    else{
+        alert("El usuario ya se encuentra en el proyecto")
     }
 }
 

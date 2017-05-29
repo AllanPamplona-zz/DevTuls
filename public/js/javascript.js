@@ -1,6 +1,7 @@
 var auxDrag;
 var urlG = "localhost:3030"
-
+var checkmodal = false
+var abrio = false
 function update(){
     $.ajax({
         url: 'http://'+urlG+'/update',
@@ -37,7 +38,9 @@ function create(json, res){
           else{
                 $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card lime lighten-3 white-text\"><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
           }
+          if(res==json[i].id_usuario){
           $('#'+json[i]._id+'').draggable();
+          }
       }
     }
   }
@@ -50,23 +53,6 @@ $("a").click(function(){
     }
 });
 }
-/*/Insertar nueva nots
-$('#new').on('submit', function(event){
-    event.preventDefault();
-    var data = {
-        nombre: $('#nombre').val(),
-    };
-    $.ajax({
-        url: 'http://'+urlG+'/createtask',
-        data: data,
-        method: 'POST'
-    }).then(function(response){
-        socket.emit('update', 'updating');
-    }).catch(function(err){
-        console.error(err);
-    });
-});
-*/
 
 var socket = io.connect(urlG);
 socket.on('connect', function(data){
@@ -119,19 +105,184 @@ $("#nuevanota2").on('keyup', function(e){
         save(comp);
     }
 });
-$(document).ready(function(){
-  var texto;
-  $('.modal').modal();
-  $("#dropdown1").click(function(e){
-    texto = e.target.text;
-    $("#idproyecto").html(texto + '<i class="material-icons right">arrow_drop_down</i>');
-  });
-  $("#idmiembros").click(function(){
-    texto = $("#idproyecto").text();
-    var aux = "arrow_drop_down";
-    var aux2 = texto.length -aux.length;
-    $("#miembros-proyecto").html(texto.substring(0,aux2));
-  });
+$("#idmiembros").click(function(er){
+   checkmodal = true 
+    abrio=true
+})
+$(document).keyup(function(e){
+    if(e.keyCode==27 && checkmodal){
+        checkmodal = false
+    }
+})
+$(document).click(function(e){
+    if(!$(e.target).closest('#modal1').length && !$(e.target).closest('#modal2').length){
+    if(checkmodal){
+    abrio = !abrio
+    }}
+    if(abrio){
+    if(!$(e.target).closest('#modal1').length && !$(e.target).closest('#modal2').length){
+        if($('#modal1').is(":visible")){
+            $('#modal1').modal('close')
+            checkmodal = false
+        }
+    }
+    }
+})
+
+function updatemiembros(){
+  $.ajax({
+            url:'http://'+urlG+'/miembrosupdate',
+            method:'POST'
+        }).then(function(data){
+            $("#miembros").empty()
+            var aux = "";
+
+            data.usuarios.forEach(function(x){
+                if(data.jefe){
+                    aux = '<span class="badge"><button id="'+x._id+'"class="botoneliminar">X</button></span>'
+                }
+               $("#miembros").append('<li class="collection-item">'+aux+x.name+' '+x.lastname+'</li>')
+            })
+            $("#creador").text("Propietario: "+data.propietario[0].name+" "+data.propietario[0].lastname)
+            $('.botoneliminar').click(function(e){
+                borrarmiembro(this.id)
+            });
+            if(!data.jefe){
+                $("#modal2abrir").attr("href","#!")
+                $("#remover").off('click')
+            }
+        }).catch(function(err){
+            console.error(err)
+        });
+
+}
+$("#closemodal").click(function(){
+    $("#coleccion").empty();
+    $("#email").val('');
+})
+
+function agregar(json){
+    if($('#'+json[0]._id).length==0){
+        $("#coleccion").append('<li id="'+json[0]._id+'" value="'+json[0]._id+'"class="collection-item dismissable"><div>'+json[0].name+' '+json[0].lastname+'</div></li>')
+    }
+    else{
+        alert("El usuario ya se encuentra en el proyecto")
+    }
+}
+
+
+$("#agregar").click(function(){
+    var data = $('#email').val();
+    if(data.length==0){
+        return
+    }
+    $.ajax({
+        url: 'http://'+urlG+'/validaremail',
+        data: {email:data},
+        method: 'POST'
+    }).then(function(data){
+        if(data.resultado == "1"){
+            agregar(data.usuario)
+        }else{
+            if(data.resultado == "0"){
+                alert("El usuario no se encuentra en el sistema")
+            }
+        }
+    }).catch(function(err){
+        console.error(err)
+    });
+});
+
+   
+$("#añadir").click(function(){
+    var pertenece = $("#coleccion li");
+    var pertearray = []
+        pertenece.each(function(idx,li){
+            pertearray.push($(li).attr('value'))
+        });
+        $.ajax({
+            url:'http://'+urlG+'/agregarmiembros',
+            data: {pertenece:pertearray},
+            method:'POST'
+        }).then(function(data){
+            if(data.resultado=="1"){
+                alert("Se guardo con exito")
+                $('#modal2').modal('close');    
+                $("#coleccion").empty();
+                $("#email").val('');
+                updatemiembros()
+            }
+            else{
+                alert("No se pudo guardar")
+            }
+        }).catch(function(err){
+            console.error(err)
+        });
+})
+
+function borrarmiembro(id){
+    $.ajax({
+        url: 'http://'+urlG+'/borrarmiembro',
+        data: {id:id},
+        method:'POST'
+    }).then(function(data){
+        updatemiembros()
+        update()
+    }).catch(function(err){
+        console.log(err)
+    })
+}
+function updateselect(){
+ $.ajax({
+            url:'http://'+urlG+'/selecupdate',
+            method:'POST'
+        }).then(function(data){
+            $("#dropdown1").empty()
+            $("#dropdown1").append('<li class="proyectos" id="disable">Escoja un proyecto</li>')
+            var aux = "";
+            data.proy.forEach(function(x){
+                if(x._id==data.actu){
+                    aux = x.nombre;
+                }
+                else{
+               $("#dropdown1").append('<li class="proyectos" id="'+x._id+'">'+x.nombre+'</li>')
+                }
+            })
+            $("#dropdown1").append('<li class="divider"></li>')
+            $("#dropdown1").append('<li class="proyectos" id="nuevo">Nuevo proyecto</li>')
+            $("#idproyecto").html(aux + '<i class="material-icons right">arrow_drop_down</i>')
+              $(".proyectos").click(function(e){
+                console.log(this.id)
+                  if(this.id!="disable"){
+                        proyectosiguiente(this.id)
+                  }
+              });
+        }).catch(function(err){
+            console.error(err)
+        });
+
+}
+
+function proyectosiguiente(id){
+    $.ajax({
+        url:'http://'+urlG+'/cambiarproyecto',
+        data: {dato:id},
+        method:'POST'
+    }).then(function(data){
+        window.location.href=data.redirect;
+    }).catch(function(err){
+        console.error(err)
+    });
+}
+$('#remover').click(function(){
+    $.ajax({
+        url: 'http://'+urlG+'/deleteproject',
+        method: 'POST'
+    }).then(function(data){
+        window.location.href=data.redirect;
+    }).catch(function(err){
+        console.error(err)
+    });
 });
 
 function save(data){
@@ -170,22 +321,6 @@ function erase(data){
         console.log(err);
     });
 };
-
-
-
-
-
-//LLena el tablero con las notas
-/**
-for (var i = 0; i < tableros.length; i++) {
-  for (var j = 0; j < jsonp.length; j++) {
-    if (idTableros[i] == jsonp[j].estado) {
-      $("#"+idTableros[i]+"").append("<div class=\"row arrastable\"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><div class=\"contenido\" id=\""+tableros[i]+"\">"+jsonp[j].contenido+"</div></div></div></div>");
-    }
-  }
-<<<<<<< HEAD
-}**/
-
 //Vuelve dragueables las notas;
 $('#uno').draggable();
 $('.contai').droppable({
@@ -198,3 +333,17 @@ $('.contai').droppable({
     }
 });
 update()
+$(document).ready(function(){
+  var texto;
+  $('.modal').modal({
+      dismissible: true,
+      });
+    updateselect()
+    updatemiembros()
+  $("#idmiembros").click(function(){
+    texto = $("#idproyecto").text();
+    var aux = "arrow_drop_down";
+    var aux2 = texto.length -aux.length;
+    $("#miembros-proyecto").html(texto.substring(0,aux2));
+  });
+});

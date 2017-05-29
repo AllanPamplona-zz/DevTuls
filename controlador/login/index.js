@@ -51,8 +51,8 @@ app.post("/createuser",function(req,res){
 
 
 app.get("/",function(req,res){
-    db.User.find(function(err,doc){
-    if(req.session==null){
+    console.log(req.session.user_id)
+    if(req.session.user_id==undefined){
         res.render("login");
     }
     else
@@ -62,5 +62,4 @@ app.get("/",function(req,res){
         else{
             res.redirect("/selector");
         }
-    })
 })

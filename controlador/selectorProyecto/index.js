@@ -25,7 +25,7 @@ app.post('/selecupdate',function(req,res){
                 array.push(e)
             }
         })
-        res.send({proy:array})
+        res.send({proy:array, actu:req.session.currentproject})
     });
 });
 app.post('/seleccionado', function(req,res){

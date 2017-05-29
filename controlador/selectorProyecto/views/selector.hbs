@@ -50,12 +50,8 @@
      <!--Fin modal crear-->
        <div class="caja">         
          <select  class="clase" id="listaselector">
-          <option value="disable" disabled selected>Choose your option</option>
-          {{#each proy}}
-          <option value={{this._id}}> {{this.nombre}}</option>
-          {{/each}}
         </select>
-        <a id="selectorid" class="waves-effect blue lighten-3 z-depth-4 btn boton-selector">button</a>
+        <a id="selectorid" class="waves-effect blue lighten-3 z-depth-4 btn boton-selector">Seleccionar</a>
         <a id="crearid" href="#modal1" class="waves-effect blue lighten-3 z-depth-4 btn boton-selector">Crear</a>
     </div>
    </main>
@@ -72,6 +68,7 @@
 <script src='/node1/jquery-ui.min.js'></script>
 <script src='/socket/socket.io.js'></script>
 <script src='/pub/js/selector.js'></script>
+<script src='/pub/js/updateproyectos.js'></script>
 <script src='/pub/select2/dist/js/select2.min.js'></script>
 <script src='/pub/js/materialize.min.js'></script>           
 <script>
