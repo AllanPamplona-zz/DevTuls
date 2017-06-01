@@ -29,6 +29,7 @@ footer {
 .card{
   margin: 10px;
   border:white;
+  z-index:1;
 }
 
 .contenido{
