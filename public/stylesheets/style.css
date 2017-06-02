@@ -29,18 +29,19 @@ footer {
 .card{
   margin: 10px;
   border:white;
-  z-index:1;
 }
-
+.tarea{
+    z-index:10
+}
+.table{
+    z-index:1
+}
 .contenido{
   padding: 15px;
 }
 
 main{
   padding-bottom: 100px;
-}
-.card  .amber{
-   z-index: 2000;
 }
 header{
   z-index:4900;

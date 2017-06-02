@@ -16,7 +16,19 @@ app.post('/cambiarproyecto', function(req,res){
 });
 app.post('/update', function(req, res){
     db.Tarea.find({id_proyecto:req.session.currentproject },function(err,users){
-        res.send(users);
+        db.Proyecto.findOne({_id:mongoo.Types.ObjectId(req.session.currentproject)},function(err,proy){
+            aux2 = 1
+            aux = []
+            users.forEach(function(e){
+                if(proy.id_pertenecientes.indexOf(e.id_usuario)!=-1 || proy.id_creador==e.id_usuario){
+                    aux.push(e)
+                }
+                aux2 = aux2 + 1
+                if(aux2==users.length){
+                    res.send(aux)
+                }
+            })
+        })
 
     });
 });
@@ -54,9 +66,11 @@ app.post('/borrarmiembro',function(req,res){
 app.post('/deleteproject',function(req,res){
     db.Proyecto.find({_id:mongoo.Types.ObjectId(req.session.currentproject)}).remove(function(err){
         if(err){console.log(err)}
-        req.session.currentproject=null;
-        res.send({redirect:'/selector'});
-    });
+        db.Tarea.find({id_proyecto:req.session.currentproject}).remove(function(err){ 
+            req.session.currentproject=null;
+            res.send({redirect:'/selector'});
+            })
+        });
 });
 app.post('/getid',function(req,res){
     res.send(req.session.user_id)

@@ -7,57 +7,74 @@ var cookieSession=require('cookie-session');
 }));
 
 app.get("/servicio/proyecto", function(req,res){
-    db.Proyecto.find({},function(err, res){
-        res.send({res:res})
+    db.Proyecto.find({},function(err, proy){
+        res.send({res:proy})
     })
 })
 
-app.post("/login",function(req,res){
-    db.User.findOne({email:req.body.email, password:req.body.password}, function(err,docs){		
-    if(err)
-	console.log("Hubo un error");
-    else
-	if(docs!=null){
-	    req.session.user_id=docs._id;
-	    res.redirect("/selector");
-	}
-	else{
-	    res.render('login',{res:true});
-	    }
-	})
+app.get("/servicio/miembros", function(req,res){
+    db.User.find({},function(err, proy){
+        res.send({res:proy})
+    })
 })
-app.get("/newUser",function(req,res){ //recibe una peticion get que redirecciona para crear un nuevo perfil
-    res.render("newUser");
-})  
-app.post("/createuser",function(req,res){
-    db.User.find({email:req.body.email},function(err, usuario){    
-        if(usuario.length!=0){
-            res.render("newUser",{res:false})
+app.get("/servicio/notas", function(req,res){
+    db.Tarea.find({},function(err, proy){
+        res.send({res:proy})
+    })
+})
+app.post("/servicio/borrarusuario", function(req, res){
+    db.User.find({email:req.body.data},function(err, uss)    {
+        if(uss.length==0){
+            res.send({data:"No existe"})
         }
         else{
-            var user = new db.User({name:req.body.name, lastname:req.body.lastname, password:req.body.password, 
-            password_confirmation:req.body.passwordval, email:req.body.email}); //se reciben parametros JSON para crear nuevo usuario
-            user.save(function(err){ //Se crea un nuevo usuario con el metodo save de la libreria mongoose
-            if(err)
-    	        res.render("newUser",{fail:true, str:err});
-            else
-                res.render("login",{creado:true})
+            actualizar(uss[0]._id)
+            actualizarnotas(uss[0]._id)
+            db.User.find({_id:uss[0]._id}).remove(function(err){
+                if(err){console.log(err)}
+                else{
+                    res.send({data:"Borrado"})
+                }
             })
         }
+
     })
 })
-
-
-app.get("/",function(req,res){
-    console.log(req.session.user_id)
-    if(req.session.user_id==undefined){
-        res.render("login");
-    }
-    else
-        if(req.session.currentproject!=null){
-    	    res.redirect("/kanban");	
-        }
+app.post("/servicio/cambiarcorreo",function(req,res){
+    db.User.update({email:req.body.correo}, {$set:{email:req.body.nuevocorreo}},function(err){
+        if(err){console.log(err)}
         else{
-            res.redirect("/selector");
+            res.send({res:"Actualizado con exito"})
         }
+    })
 })
+function actualizarnotas(dato){
+    db.Tarea.find({id_usuario:dato}).remove(function(err){
+        if(err){console.log(err)}
+        else{
+        console.log("borrados")
+        }
+    })
+}
+function actualizar(dato){
+    db.Proyecto.find({},function(err,res){
+        res.forEach(function(eac){
+            aux = eac.id_pertenecientes.indexOf(dato)
+            if( aux != -1){
+                db.Proyecto.update({_id:eac._id},{$pullAll: {id_pertenecientes:[dato]}}, function(){
+                    console.log("funciono")
+                })
+            }
+            else{
+                if(eac.id_creador==dato){
+                    db.Proyecto.find({_id:eac._id}).remove(function(err){
+                        if(err){console.log(err)}
+                        else{
+                            console.log("funciono eliminar proyecto")
+                        }
+                    })
+                }
+            }
+        })
+    })
+}

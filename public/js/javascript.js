@@ -33,7 +33,7 @@ function create(json, res){
     for(i in json){
       if (idTableros[j] == json[i].estado) {
           if(res==json[i].id_usuario){
-                $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><div><a id=\""+json[i]._id+"\" class=\"waves-effect waves-light btn nota\"> X </a></div><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
+                $("#"+idTableros[j]+"").append("<div class=\"tarea row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><div><a id=\""+json[i]._id+"\" class=\"waves-effect waves-light btn nota\"> X </a></div><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
           }
           else{
                 $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card lime lighten-3 white-text\"><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
@@ -69,7 +69,7 @@ var idTableros =["to_do_it","doing","done"]
 //Pone los tableros en el HTML
 $(".tab").append("<div class=\"row crow\">");
 for (var i = 0; i < tableros.length; i++) {
-  $(".crow").append("<div class=\"col s3\"><div class=\"card orange lighten-3\"><div class=\"card-content white-text\" ><span class=\"card-title\" id=\""+tableros[i]+"\">"+tableros[i]+"</span><div class=\"row\"><div id=\""+idTableros[i]+"\" class=contai></br></br></div><div class=\"input-field col s11\"><input  id=\"nuevanota"+i+"\" class=\""+idTableros[i]+"\" type=\"text\" class=\"validate\"><label class=\"active\" for=\"nuevanota\">Nueva Nota</label></div></div></div></div></div>");
+  $(".crow").append("<div class=\"tabler col s3\"><div class=\"card orange lighten-3\"><div class=\"card-content white-text\" ><span class=\"card-title\" id=\""+tableros[i]+"\">"+tableros[i]+"</span><div class=\"row\"><div id=\""+idTableros[i]+"\" class=contai></br></br></div><div class=\"input-field col s11\"><input  id=\"nuevanota"+i+"\" class=\""+idTableros[i]+"\" type=\"text\" class=\"validate\"><label class=\"active\" for=\"nuevanota\">Nueva Nota</label></div></div></div></div></div>");
 }
 $(".tab").append("</div>");
 

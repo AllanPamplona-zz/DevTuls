@@ -51,12 +51,11 @@ app.post("/createuser",function(req,res){
 
 
 app.get("/",function(req,res){
-    console.log(req.session.user_id)
     if(req.session.user_id==undefined){
         res.render("login");
     }
     else
-        if(req.session.currentproject!=null){
+        if(req.session.currentproject==undefined){
     	    res.redirect("/kanban");	
         }
         else{
