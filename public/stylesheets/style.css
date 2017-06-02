@@ -67,3 +67,8 @@ header{
  .modal{
    z-index: 4900;
  }
+
+.container{
+  position: relative;
+  margin-top: 10%;
+}
