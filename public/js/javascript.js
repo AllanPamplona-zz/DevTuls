@@ -45,13 +45,13 @@ function create(json, res){
     }
   }
 
-$("a").click(function(){
+/*$("a").click(function(){
     var clase = $(this).attr("class")
     if(clase.indexOf("nota")!=-1){
         var myid = {id:$(this).attr("id")};
         erase(myid);
     }
-});
+});*/
 }
 
 var socket = io.connect(urlG);
@@ -157,8 +157,8 @@ function updatemiembros(){
 
 }
 $("#closemodal").click(function(){
-    $("#coleccion").empty();
-    $("#email").val('');
+    $("#coleccionmodal").empty();
+    $("#emailmodal").val('');
 })
 
 function agregar(json){
@@ -249,11 +249,10 @@ function updateselect(){
                 }
             })
             $("#dropdown1").append('<li class="divider"></li>')
-            $("#dropdown1").append('<li class="proyectos" id="nuevo">Nuevo proyecto</li>')
+            $("#dropdown1").append('<li class="proyectos" id="nuevo"><a href="#modal3">Nuevo proyecto</a></li>')
             $("#idproyecto").html(aux + '<i class="material-icons right">arrow_drop_down</i>')
               $(".proyectos").click(function(e){
-                console.log(this.id)
-                  if(this.id!="disable"){
+                  if(this.id!="disable" && this.id!="nuevo"){
                         proyectosiguiente(this.id)
                   }
               });
@@ -333,6 +332,74 @@ $('.contai').droppable({
     }
 });
 update()
+$("#closemodal2").click(function(){
+    $("#coleccionmodal").empty();
+    $("#nombremodal").val('');
+    $("#emailmodal").val('');
+})
+$("#añadirmodal").click(function(){
+    var pertenece = $("#coleccionmodal li");
+    var nombre = $('#nombremodal').val();
+    var pertearray = []
+    if(nombre.length == 0){
+        alert("Debe ingresar un nombre")
+    }
+    else{
+        pertenece.each(function(idx,li){
+            pertearray.push($(li).attr('value'))
+        });
+        $.ajax({
+            url:'http://'+urlG+'/agregarproyecto',
+            data: {nombre:nombre, pertenece:pertearray, kan:"1"},
+            method:'POST'
+        }).then(function(data){
+            if(data.resultado=="1"){
+                alert("Se guardo con exito")
+                $('#modal3').modal('close');    
+                $("#coleccionmodal").empty();
+                $("#nombremodal").val('');
+                $("#emailmodal").val('');
+                updateselect()
+            }
+            else{
+                alert("No se pudo guardar")
+            }
+        }).catch(function(err){
+            console.error(err)
+        });
+    }
+})
+$("#agregarmodal").click(function(){
+    var data = $('#emailmodal').val();
+    if(data.length==0){
+        return
+    }
+    $.ajax({
+        url: 'http://'+urlG+'/validaremail',
+        data: {email:data},
+        method: 'POST'
+    }).then(function(data){
+        if(data.resultado == "1"){
+            agregarmodal(data.usuario)
+        }else{
+            if(data.resultado == "0"){
+                alert("El usuario no se encuentra en el sistema")
+            }
+        }
+    }).catch(function(err){
+        console.error(err)
+    });
+});
+
+function agregarmodal(json){
+    if($('#'+json[0]._id).length==0){
+        $("#coleccionmodal").append('<li id='+json[0]._id+' value='+json[0]._id+'><div>'+json[0].name+'</div></li>')
+    }
+    else{
+        alert("El usuario ya se encuentra en el proyecto")
+    }
+}
+
 $(document).ready(function(){
   var texto;
   $('.modal').modal({
@@ -347,3 +414,4 @@ $(document).ready(function(){
     $("#miembros-proyecto").html(texto.substring(0,aux2));
   });
 });
+

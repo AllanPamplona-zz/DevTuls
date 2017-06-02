@@ -32,7 +32,7 @@ $("#añadir").click(function(){
         });
         $.ajax({
             url:'http://'+urlG+'/agregarproyecto',
-            data: {nombre:nombre, pertenece:pertearray},
+            data: {nombre:nombre, pertenece:pertearray,kan:"0"},
             method:'POST'
         }).then(function(data){
             if(data.resultado=="1"){
