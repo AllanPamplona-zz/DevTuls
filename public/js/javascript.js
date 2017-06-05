@@ -31,7 +31,6 @@ function create(json, res){
   for (j in idTableros) {
       $("#"+idTableros[j]).append("</br></br>");
     for(i in json){
-        console.log(json)
       if (idTableros[j] == json[i].estado) {
           if(res==json[i].id_usuario){
                 $("#"+idTableros[j]+"").append("<div class=\"tarea row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><div><a id=\""+json[i]._id+"\" class=\"waves-effect waves-light btn nota\"> X </a></div><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
@@ -145,7 +144,7 @@ function updatemiembros(){
                 if(data.jefe){
                     aux = '<span class="badge"><button id="'+x._id+'"class="botoneliminar">X</button></span>'
                 }
-               $("#miembros").append('<li class="collection-item">'+aux+x.name+' '+x.lastname+'</li>')
+               $("#miembros").append('<li id="'+x._id+'s" class="miembro collection-item">'+aux+x.name+' '+x.lastname+'</li>')
             })
             $("#creador").text("Propietario: "+data.propietario[0].name+" "+data.propietario[0].lastname)
             $('.botoneliminar').click(function(e){
@@ -400,7 +399,12 @@ function agregarmodal(json){
         $("#coleccionmodal").append('<li id='+json[0]._id+' value='+json[0]._id+'><div>'+json[0].name+'</div></li>')
     }
     else{
+        aux = $('#'+json[0]._id).attr("class")
+        if(aux=="botoneliminar"){
+            $("#coleccionmodal").append('<li id='+json[0]._id+' value='+json[0]._id+'><div>'+json[0].name+'</div></li>')
+        }else{
         alert("El usuario ya se encuentra en el proyecto")
+        }
     }
 }
 
