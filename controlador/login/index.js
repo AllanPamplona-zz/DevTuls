@@ -55,7 +55,7 @@ app.get("/",function(req,res){
         res.render("login");
     }
     else
-        if(req.session.currentproject==undefined){
+        if(req.session.currentproject!=undefined){
     	    res.redirect("/kanban");	
         }
         else{

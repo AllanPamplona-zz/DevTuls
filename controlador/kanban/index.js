@@ -17,8 +17,11 @@ app.post('/cambiarproyecto', function(req,res){
 app.post('/update', function(req, res){
     db.Tarea.find({id_proyecto:req.session.currentproject },function(err,users){
         db.Proyecto.findOne({_id:mongoo.Types.ObjectId(req.session.currentproject)},function(err,proy){
-            aux2 = 1
+            aux2 = 0
             aux = []
+            if(users.length==0){
+                res.send(aux)
+            }
             users.forEach(function(e){
                 if(proy.id_pertenecientes.indexOf(e.id_usuario)!=-1 || proy.id_creador==e.id_usuario){
                     aux.push(e)
@@ -99,6 +102,6 @@ app.post('/actu', function(req,res){
 app.post('/delete', function(req,res){
     db.Tarea.find({_id:mongoo.Types.ObjectId(req.body.id)}).remove(function(err){
         if (err) {console.log(err);}
-        res.send("1dd");
+        else{res.send("1dd");}
     });
 });

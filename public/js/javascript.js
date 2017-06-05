@@ -31,6 +31,7 @@ function create(json, res){
   for (j in idTableros) {
       $("#"+idTableros[j]).append("</br></br>");
     for(i in json){
+        console.log(json)
       if (idTableros[j] == json[i].estado) {
           if(res==json[i].id_usuario){
                 $("#"+idTableros[j]+"").append("<div class=\"tarea row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><div><a id=\""+json[i]._id+"\" class=\"waves-effect waves-light btn nota\"> X </a></div><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
@@ -45,13 +46,13 @@ function create(json, res){
     }
   }
 
-/*$("a").click(function(){
+$("a").click(function(){
     var clase = $(this).attr("class")
     if(clase.indexOf("nota")!=-1){
         var myid = {id:$(this).attr("id")};
         erase(myid);
     }
-});*/
+});
 }
 
 var socket = io.connect(urlG);
@@ -81,6 +82,7 @@ $("#nuevanota0").on('keyup', function(e){
             fecha: new Date(),
             estado: "to_do_it"
         };
+        $("#nuevanota0").val("")
         save(comp);
     }
 });
@@ -92,6 +94,7 @@ $("#nuevanota1").on('keyup', function(e){
             fecha: new Date(),
             estado: "doing"
         };
+        $("#nuevanota1").val("")
         save(comp);
     }
 });
@@ -102,6 +105,7 @@ $("#nuevanota2").on('keyup', function(e){
             fecha: new Date(),
             estado: "done"
         }
+        $("#nuevanota2")
         save(comp);
     }
 });

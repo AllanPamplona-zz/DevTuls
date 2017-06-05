@@ -5,7 +5,7 @@ var cookieSession=require('cookie-session');
 	app.use(cookieSession({name:"session",
 	 keys:["key1", "key2"]
 }));
-
+// Recibe la llama get y retorna los proyectos, tareas y usuarios
 app.get("/servicio/proyecto", function(req,res){
     db.Proyecto.find({},function(err, proy){
         res.send({res:proy})
@@ -22,6 +22,7 @@ app.get("/servicio/notas", function(req,res){
         res.send({res:proy})
     })
 })
+// Recibe una llamada post con parametros email del usuario y retorna un mensaje de confirmación o error.
 app.post("/servicio/borrarusuario", function(req, res){
     db.User.find({email:req.body.data},function(err, uss)    {
         if(uss.length==0){
@@ -40,6 +41,7 @@ app.post("/servicio/borrarusuario", function(req, res){
 
     })
 })
+// Recibe como parametro  un email de usuario y su nuevo email para cambio y retorna mensaje de completado o error
 app.post("/servicio/cambiarcorreo",function(req,res){
     db.User.update({email:req.body.correo}, {$set:{email:req.body.nuevocorreo}},function(err){
         if(err){console.log(err)}
