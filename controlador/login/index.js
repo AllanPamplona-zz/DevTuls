@@ -1,19 +1,21 @@
+// Se importan modulos
 var express = require('express');
 var app = module.exports = express();
-var mongoo = require('mongoose');
-app.set('views', __dirname + '/views');
-//var User= require('../../modelos/index.js').User;
+
 var cookieSession=require('cookie-session');
 	app.use(cookieSession({name:"session",
 	 keys:["key1", "key2"]
 }));
 
-
+var mongoo = require('mongoose');
+// Se asigna el directoria de vistas
+app.set('views', __dirname + '/views');
+// Funcion para resetear la sesión (logout)
 app.get("/logout",function(req,res){
     req.session=null;
     res.redirect("/");
 })
-
+//
 app.post("/login",function(req,res){
     db.User.findOne({email:req.body.email, password:req.body.password}, function(err,docs){		
     if(err)

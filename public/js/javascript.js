@@ -1,10 +1,10 @@
-var auxDrag;
-var urlG = "localhost:3030"
-var checkmodal = false
-var abrio = false
+var auxDrag,
+  URL_SOCKET = "192.168.2.103:3030",
+  checkModal = false,
+  abrio = false
 function update(){
     $.ajax({
-        url: 'http://'+urlG+'/update',
+        url: 'http://'+URL_SOCKET+'/update',
         method: 'POST'
     }).then(function(response){
         getId(response);
@@ -15,7 +15,7 @@ function update(){
 
 function getId(res){
     $.ajax({
-        url: 'http://'+urlG+'/getid',
+        url: 'http://'+URL_SOCKET+'/getid',
         method: 'POST'
     }).then(function(response){
         create(res,response)
@@ -25,18 +25,18 @@ function getId(res){
 }
 
 function create(json, res){
-  for (var i = 0; i < tableros.length; i++) {
-    $("#"+idTableros[i]+"").empty();
+  for (var i = 0; i < TABLEROS.length; i++) {
+    $("#"+ID_TABLEROS[i]+"").empty();
   }
-  for (j in idTableros) {
-      $("#"+idTableros[j]).append("</br></br>");
+  for (j in ID_TABLEROS) {
+      $("#"+ID_TABLEROS[j]).append("</br></br>");
     for(i in json){
-      if (idTableros[j] == json[i].estado) {
+      if (ID_TABLEROS[j] == json[i].estado) {
           if(res==json[i].id_usuario){
-                $("#"+idTableros[j]+"").append("<div class=\"tarea row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><div><a id=\""+json[i]._id+"\" class=\"waves-effect waves-light btn nota\"> X </a></div><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
+                $("#"+ID_TABLEROS[j]+"").append("<div class=\"tarea row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card  amber accent-1 white-text\"><div><a id=\""+json[i]._id+"\" class=\"waves-effect waves-light btn nota\"> X </a></div><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
           }
           else{
-                $("#"+idTableros[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card lime lighten-3 white-text\"><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
+                $("#"+ID_TABLEROS[j]+"").append("<div class=\"row \" id="+json[i]._id+"><div class=\"col s12\"><div class=\"card lime lighten-3 white-text\"><div class=\"contenido\">"+json[i].contenido+ "<br>" + new Date(json[i].fecha)+ "</div></div></div></div>");
           }
           if(res==json[i].id_usuario){
           $('#'+json[i]._id+'').draggable();
@@ -46,30 +46,30 @@ function create(json, res){
   }
 
 $("a").click(function(){
-    var clase = $(this).attr("class")
-    if(clase.indexOf("nota")!=-1){
+    var $clase = $(this).attr("class")
+    if($clase.indexOf("nota")!=-1){
         var myid = {id:$(this).attr("id")};
         erase(myid);
     }
 });
 }
 
-var socket = io.connect(urlG);
-socket.on('connect', function(data){
-    socket.emit('join', 'Hellow world from client');
+var SOCKET = io.connect(URL_SOCKET);
+SOCKET.on('connect', function(data){
+    SOCKET.emit('join', 'Hellow world from client');
 });
-socket.on('broad', function(data){
+SOCKET.on('broad', function(data){
     update();
 });
 
 //Crear Tableros
-var tableros = ["To do", "Doing","Finish"];
-var idTableros =["to_do_it","doing","done"]
+var TABLEROS = ["To do", "Doing","Finish"],
+  ID_TABLEROS =["to_do_it","doing","done"]
 
 //Pone los tableros en el HTML
 $(".tab").append("<div class=\"row crow\">");
-for (var i = 0; i < tableros.length; i++) {
-  $(".crow").append("<div class=\"tabler col s3\"><div class=\"card orange lighten-3\"><div class=\"card-content white-text\" ><span class=\"card-title\" id=\""+tableros[i]+"\">"+tableros[i]+"</span><div class=\"row\"><div id=\""+idTableros[i]+"\" class=contai></br></br></div><div class=\"input-field col s11\"><input  id=\"nuevanota"+i+"\" class=\""+idTableros[i]+"\" type=\"text\" class=\"validate\"><label class=\"active\" for=\"nuevanota\">Nueva Nota</label></div></div></div></div></div>");
+for (var i = 0; i < TABLEROS.length; i++) {
+  $(".crow").append("<div class=\"tabler col s3\"><div class=\"card orange lighten-3\"><div class=\"card-content white-text\" ><span class=\"card-title\" id=\""+TABLEROS[i]+"\">"+TABLEROS[i]+"</span><div class=\"row\"><div id=\""+ID_TABLEROS[i]+"\" class=contai></br></br></div><div class=\"input-field col s11\"><input  id=\"nuevanota"+i+"\" class=\""+ID_TABLEROS[i]+"\" type=\"text\" class=\"validate\"><label class=\"active\" for=\"nuevanota\">Nueva Nota</label></div></div></div></div></div>");
 }
 $(".tab").append("</div>");
 
@@ -104,29 +104,29 @@ $("#nuevanota2").on('keyup', function(e){
             fecha: new Date(),
             estado: "done"
         }
-        $("#nuevanota2")
+        $("#nuevanota2").val("")
         save(comp);
     }
 });
 $("#idmiembros").click(function(er){
-   checkmodal = true 
+   checkModal = true
     abrio=true
 })
 $(document).keyup(function(e){
-    if(e.keyCode==27 && checkmodal){
-        checkmodal = false
+    if(e.keyCode==27 && checkModal){
+        checkModal = false
     }
 })
 $(document).click(function(e){
     if(!$(e.target).closest('#modal1').length && !$(e.target).closest('#modal2').length){
-    if(checkmodal){
+    if(checkModal){
     abrio = !abrio
     }}
     if(abrio){
     if(!$(e.target).closest('#modal1').length && !$(e.target).closest('#modal2').length){
         if($('#modal1').is(":visible")){
             $('#modal1').modal('close')
-            checkmodal = false
+            checkModal = false
         }
     }
     }
@@ -134,7 +134,7 @@ $(document).click(function(e){
 
 function updatemiembros(){
   $.ajax({
-            url:'http://'+urlG+'/miembrosupdate',
+            url:'http://'+URL_SOCKET+'/miembrosupdate',
             method:'POST'
         }).then(function(data){
             $("#miembros").empty()
@@ -175,19 +175,19 @@ function agregar(json){
 
 
 $("#agregar").click(function(){
-    var data = $('#email').val();
-    if(data.length==0){
+    var $data = $('#email').val();
+    if($data.length==0){
         return
     }
     $.ajax({
-        url: 'http://'+urlG+'/validaremail',
+        url: 'http://'+URL_SOCKET+'/validaremail',
         data: {email:data},
         method: 'POST'
     }).then(function(data){
-        if(data.resultado == "1"){
-            agregar(data.usuario)
+        if($data.resultado == "1"){
+            agregar($data.usuario)
         }else{
-            if(data.resultado == "0"){
+            if($data.resultado == "0"){
                 alert("El usuario no se encuentra en el sistema")
             }
         }
@@ -196,21 +196,21 @@ $("#agregar").click(function(){
     });
 });
 
-   
+
 $("#añadir").click(function(){
-    var pertenece = $("#coleccion li");
-    var pertearray = []
-        pertenece.each(function(idx,li){
-            pertearray.push($(li).attr('value'))
+    var $pertenece = $("#coleccion li");
+    var perteArray = []
+        $pertenece.each(function(idx,li){
+            perteArray.push($(li).attr('value'))
         });
         $.ajax({
-            url:'http://'+urlG+'/agregarmiembros',
-            data: {pertenece:pertearray},
+            url:'http://'+URL_SOCKET+'/agregarmiembros',
+            data: {pertenece:perteArray},
             method:'POST'
         }).then(function(data){
             if(data.resultado=="1"){
                 alert("Se guardo con exito")
-                $('#modal2').modal('close');    
+                $('#modal2').modal('close');
                 $("#coleccion").empty();
                 $("#email").val('');
                 updatemiembros()
@@ -225,7 +225,7 @@ $("#añadir").click(function(){
 
 function borrarmiembro(id){
     $.ajax({
-        url: 'http://'+urlG+'/borrarmiembro',
+        url: 'http://'+URL_SOCKET+'/borrarmiembro',
         data: {id:id},
         method:'POST'
     }).then(function(data){
@@ -237,7 +237,7 @@ function borrarmiembro(id){
 }
 function updateselect(){
  $.ajax({
-            url:'http://'+urlG+'/selecupdate',
+            url:'http://'+URL_SOCKET+'/selecupdate',
             method:'POST'
         }).then(function(data){
             $("#dropdown1").empty()
@@ -267,7 +267,7 @@ function updateselect(){
 
 function proyectosiguiente(id){
     $.ajax({
-        url:'http://'+urlG+'/cambiarproyecto',
+        url:'http://'+URL_SOCKET+'/cambiarproyecto',
         data: {dato:id},
         method:'POST'
     }).then(function(data){
@@ -278,7 +278,7 @@ function proyectosiguiente(id){
 }
 $('#remover').click(function(){
     $.ajax({
-        url: 'http://'+urlG+'/deleteproject',
+        url: 'http://'+URL_SOCKET+'/deleteproject',
         method: 'POST'
     }).then(function(data){
         window.location.href=data.redirect;
@@ -289,22 +289,22 @@ $('#remover').click(function(){
 
 function save(data){
     $.ajax({
-        url: "http://"+urlG+"/createtask",
+        url: "http://"+URL_SOCKET+"/createtask",
         data: data,
         method: "post"
     }).then(function(response){
-        socket.emit('update', "update");
+        SOCKET.emit('update', "update");
     }).catch(function(err){
         console.log(err);
     });
 };
 function actu(data){
     $.ajax({
-        url: "http://"+urlG+"/actu",
+        url: "http://"+URL_SOCKET+"/actu",
         data: data,
         method: "post"
     }).then(function(response){
-        socket.emit('update','update');
+        SOCKET.emit('update','update');
     }).catch(function(err){
         console.log(err);
     });
@@ -312,14 +312,14 @@ function actu(data){
 
 function erase(data){
     $.ajax({
-        url: "http://"+urlG+"/delete",
+        url: "http://"+URL_SOCKET+"/delete",
         data: data,
         dataType: 'application/json',
         method: "post"
     }).then(function(response){
-        socket.emit('update','update');
+        SOCKET.emit('update','update');
     }).catch(function(err){
-        socket.emit('update','update');
+        SOCKET.emit('update','update');
         console.log(err);
     });
 };
@@ -341,24 +341,24 @@ $("#closemodal2").click(function(){
     $("#emailmodal").val('');
 })
 $("#añadirmodal").click(function(){
-    var pertenece = $("#coleccionmodal li");
-    var nombre = $('#nombremodal').val();
-    var pertearray = []
-    if(nombre.length == 0){
+    var $pertenece = $("#coleccionmodal li");
+    var $nombre = $('#nombremodal').val();
+    var perteArray = []
+    if($nombre.length == 0){
         alert("Debe ingresar un nombre")
     }
     else{
-        pertenece.each(function(idx,li){
-            pertearray.push($(li).attr('value'))
+        $pertenece.each(function(idx,li){
+            perteArray.push($(li).attr('value'))
         });
         $.ajax({
-            url:'http://'+urlG+'/agregarproyecto',
-            data: {nombre:nombre, pertenece:pertearray, kan:"1"},
+            url:'http://'+URL_SOCKET+'/agregarproyecto',
+            data: {nombre:$nombre, pertenece:perteArray, kan:"1"},
             method:'POST'
         }).then(function(data){
             if(data.resultado=="1"){
                 alert("Se guardo con exito")
-                $('#modal3').modal('close');    
+                $('#modal3').modal('close');
                 $("#coleccionmodal").empty();
                 $("#nombremodal").val('');
                 $("#emailmodal").val('');
@@ -373,19 +373,19 @@ $("#añadirmodal").click(function(){
     }
 })
 $("#agregarmodal").click(function(){
-    var data = $('#emailmodal').val();
-    if(data.length==0){
+    var $data = $('#emailmodal').val();
+    if($data.length==0){
         return
     }
     $.ajax({
-        url: 'http://'+urlG+'/validaremail',
+        url: 'http://'+URL_SOCKET+'/validaremail',
         data: {email:data},
         method: 'POST'
     }).then(function(data){
-        if(data.resultado == "1"){
-            agregarmodal(data.usuario)
+        if($data.resultado == "1"){
+            agregarmodal($data.usuario)
         }else{
-            if(data.resultado == "0"){
+            if($data.resultado == "0"){
                 alert("El usuario no se encuentra en el sistema")
             }
         }
@@ -416,10 +416,9 @@ $(document).ready(function(){
     updateselect()
     updatemiembros()
   $("#idmiembros").click(function(){
-    texto = $("#idproyecto").text();
+    $texto = $("#idproyecto").text();
     var aux = "arrow_drop_down";
     var aux2 = texto.length -aux.length;
-    $("#miembros-proyecto").html(texto.substring(0,aux2));
+    $("#miembros-proyecto").html($texto.substring(0,aux2));
   });
 });
-

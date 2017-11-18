@@ -16,5 +16,4 @@ if(!global.hasOwnProperty('db')){
     };
 }
 // se exporta la base de datos
-//
 module.exports = global.db;

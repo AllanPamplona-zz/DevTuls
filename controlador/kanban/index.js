@@ -1,19 +1,28 @@
+// Inicialización de los modulos necesarios
 var express = require('express');
 var app = module.exports = express();
 var mongoo = require('mongoose');
+// Se registra el directorio de las vistas
 app.set('views', __dirname + '/views');
+
 var cookieSession = require('cookie-session');
 app.use(cookieSession({name:"session",
     keys:["key1", "key2"]	 
 }));
 
+// Ruteo con express
+
+// Dirección principal que renderizará la página
 app.get('/kanban', function(req, res){
         res.render('kanban');
 });
+// Llamadas AJAX y rest para operaciones
+// Llamada para cambiar el proyecto actual
 app.post('/cambiarproyecto', function(req,res){
     req.session.currentproject=req.body.dato;
     res.send({redirect:'/kanban'})
 });
+// Actualizar los usuarios de un proyecto
 app.post('/update', function(req, res){
     db.Tarea.find({id_proyecto:req.session.currentproject },function(err,users){
         db.Proyecto.findOne({_id:mongoo.Types.ObjectId(req.session.currentproject)},function(err,proy){
@@ -35,6 +44,7 @@ app.post('/update', function(req, res){
 
     });
 });
+// Agregar miembros a un proyecto
 app.post('/agregarmiembros',function(req,res){
     db.Proyecto.update({_id:req.session.currentproject},{$pushAll:{id_pertenecientes: req.body.pertenece}},{upsert:true}, function(err){
         if(err){
@@ -46,6 +56,7 @@ app.post('/agregarmiembros',function(req,res){
         }
     })
 })
+// Actualiza los miembros pertenecientes al proyecto y su creador
 app.post('/miembrosupdate',function(req,res){
     db.Proyecto.find({_id:mongoo.Types.ObjectId(req.session.currentproject)},function(err,proy){ 
         var array = proy[0].id_pertenecientes.map(function(e){return mongoo.Types.ObjectId(e)})
@@ -61,11 +72,13 @@ app.post('/miembrosupdate',function(req,res){
         });
     })
 });
+// Se elimina un miembro del proyecto
 app.post('/borrarmiembro',function(req,res){
     db.Proyecto.update({_id:mongoo.Types.ObjectId(req.session.currentproject)},{$pullAll: {id_pertenecientes:[req.body.id]}},function(){
         res.send("1dd")
     })
 });
+// Se borra un proyecto
 app.post('/deleteproject',function(req,res){
     db.Proyecto.find({_id:mongoo.Types.ObjectId(req.session.currentproject)}).remove(function(err){
         if(err){console.log(err)}
@@ -75,10 +88,12 @@ app.post('/deleteproject',function(req,res){
             })
         });
 });
+
+// Obtener el id del usuario conectado
 app.post('/getid',function(req,res){
     res.send(req.session.user_id)
 });
-
+// Crear una nueva tarea
 app.post('/createtask', function(req , res){
     var t = db.Tarea({
         contenido: req.body.contenido,
@@ -92,6 +107,7 @@ app.post('/createtask', function(req , res){
         res.send("1dd");
     });
 });
+// Actualiza el estado de una tarea
 app.post('/actu', function(req,res){
     db.Tarea.update({_id:mongoo.Types.ObjectId(req.body.id)},{$set: {estado: req.body.estado}}, function(err){
         if (err) {console.log(err);}else{
@@ -99,6 +115,7 @@ app.post('/actu', function(req,res){
         res.send("1dd");
     });
 });
+// Elimina una tarea
 app.post('/delete', function(req,res){
     db.Tarea.find({_id:mongoo.Types.ObjectId(req.body.id)}).remove(function(err){
         if (err) {console.log(err);}
