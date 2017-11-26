@@ -3,27 +3,27 @@ require('./modelos');
 // Se importa el express para usar en la aplicacion
 var express = require("express");
 // Se asinga a app la funcionalidad de express
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var bosy = require("body-parser");
+var APP = express();
+var SERVER = require('http').Server(APP);
+var IO = require('socket.io')(SERVER);
+var BOSY = require("body-parser");
 var cookieSession=require('cookie-session');
 var hbs = require('hbs');
-// Importación de directorios 
-var kanban = require("./controlador/kanban");
-var selector = require("./controlador/selectorProyecto");
-var login = require("./controlador/login");
-var servicio = require("./servicios");
+// Importación de directorios
+var KANBAN = require("./controlador/kanban");
+var SELECTOR = require("./controlador/selectorProyecto");
+var LOGIN = require("./controlador/login");
+var SERVICIO = require("./servicios");
 
 // Registro de direcciones publicas
-app.use("/pub", express.static(('public')));
-app.use("/node",express.static(('./node_modules/jquery/dist')));
-app.use("/node1",express.static(('./node_modules/jquery-ui/dd')));
-app.use("/socket",express.static(('./node_modules/socket.io-client/dist')));
+APP.use("/pub", express.static(('public')));
+APP.use("/node",express.static(('./node_modules/jquery/dist')));
+APP.use("/node1",express.static(('./node_modules/jquery-ui/dd')));
+APP.use("/socket",express.static(('./node_modules/socket.io-client/dist')));
 hbs.registerPartials(__dirname+'views/views');
-app.set("view engine","hbs");
+APP.set("view engine","hbs");
 //Utilidad de permisos para el socket
-app.use(function(req, res, next) {
+APP.use(function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "X-Requested-With");
         res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -31,21 +31,21 @@ app.use(function(req, res, next) {
         next();
     });
 // Se registran las rutas
-app.use(bosy.urlencoded({extended: true}));
-app.use(bosy.json()); //Peticiones json
-app.use(login);
-app.use(kanban);
-app.use(selector);
-app.use(servicio);
+APP.use(BOSY.urlencoded({extended: true}));
+APP.use(BOSY.json()); //Peticiones json
+APP.use(LOGIN);
+APP.use(KANBAN);
+APP.use(SELECTOR);
+APP.use(SERVICIO);
 // Se registra el cookie
-app.use(cookieSession({name:"session",
+APP.use(cookieSession({name:"session",
     keys:["key1", "key2"]
 }));
 
 // Se inicializa el servidor en el puerto 3030
-app.set('port', process.env.PORT || 3030);
-server.listen(app.get('port'));
-io.on('connection', function(client){
+APP.set('port', process.env.PORT || 3030);
+SERVER.listen(APP.get('port'));
+IO.on('connection', function(client){
     client.on('join', function(data){
         console.log(data);
     });

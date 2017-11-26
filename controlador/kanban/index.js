@@ -1,29 +1,29 @@
 // Inicialización de los modulos necesarios
 var express = require('express');
-var app = module.exports = express();
+var APP = module.exports = express();
 var mongoo = require('mongoose');
 // Se registra el directorio de las vistas
-app.set('views', __dirname + '/views');
+APP.set('views', __dirname + '/views');
 
 var cookieSession = require('cookie-session');
-app.use(cookieSession({name:"session",
-    keys:["key1", "key2"]	 
+APP.use(cookieSession({name:"session",
+    keys:["key1", "key2"]
 }));
 
 // Ruteo con express
 
 // Dirección principal que renderizará la página
-app.get('/kanban', function(req, res){
+APP.get('/kanban', function(req, res){
         res.render('kanban');
 });
 // Llamadas AJAX y rest para operaciones
 // Llamada para cambiar el proyecto actual
-app.post('/cambiarproyecto', function(req,res){
+APP.post('/cambiarproyecto', function(req,res){
     req.session.currentproject=req.body.dato;
     res.send({redirect:'/kanban'})
 });
 // Actualizar los usuarios de un proyecto
-app.post('/update', function(req, res){
+APP.post('/update', function(req, res){
     db.Tarea.find({id_proyecto:req.session.currentproject },function(err,users){
         db.Proyecto.findOne({_id:mongoo.Types.ObjectId(req.session.currentproject)},function(err,proy){
             aux2 = 0
@@ -45,7 +45,7 @@ app.post('/update', function(req, res){
     });
 });
 // Agregar miembros a un proyecto
-app.post('/agregarmiembros',function(req,res){
+APP.post('/agregarmiembros',function(req,res){
     db.Proyecto.update({_id:req.session.currentproject},{$pushAll:{id_pertenecientes: req.body.pertenece}},{upsert:true}, function(err){
         if(err){
             console.log(err)
@@ -57,8 +57,8 @@ app.post('/agregarmiembros',function(req,res){
     })
 })
 // Actualiza los miembros pertenecientes al proyecto y su creador
-app.post('/miembrosupdate',function(req,res){
-    db.Proyecto.find({_id:mongoo.Types.ObjectId(req.session.currentproject)},function(err,proy){ 
+APP.post('/miembrosupdate',function(req,res){
+    db.Proyecto.find({_id:mongoo.Types.ObjectId(req.session.currentproject)},function(err,proy){
         var array = proy[0].id_pertenecientes.map(function(e){return mongoo.Types.ObjectId(e)})
         db.User.find({ _id:{ $in:array}},function(err,users){
             db.User.find({_id:mongoo.Types.ObjectId(proy[0].id_creador)},function(err,uss){
@@ -73,16 +73,16 @@ app.post('/miembrosupdate',function(req,res){
     })
 });
 // Se elimina un miembro del proyecto
-app.post('/borrarmiembro',function(req,res){
+APP.post('/borrarmiembro',function(req,res){
     db.Proyecto.update({_id:mongoo.Types.ObjectId(req.session.currentproject)},{$pullAll: {id_pertenecientes:[req.body.id]}},function(){
         res.send("1dd")
     })
 });
 // Se borra un proyecto
-app.post('/deleteproject',function(req,res){
+APP.post('/deleteproject',function(req,res){
     db.Proyecto.find({_id:mongoo.Types.ObjectId(req.session.currentproject)}).remove(function(err){
         if(err){console.log(err)}
-        db.Tarea.find({id_proyecto:req.session.currentproject}).remove(function(err){ 
+        db.Tarea.find({id_proyecto:req.session.currentproject}).remove(function(err){
             req.session.currentproject=null;
             res.send({redirect:'/selector'});
             })
@@ -90,11 +90,11 @@ app.post('/deleteproject',function(req,res){
 });
 
 // Obtener el id del usuario conectado
-app.post('/getid',function(req,res){
+APP.post('/getid',function(req,res){
     res.send(req.session.user_id)
 });
 // Crear una nueva tarea
-app.post('/createtask', function(req , res){
+APP.post('/createtask', function(req , res){
     var t = db.Tarea({
         contenido: req.body.contenido,
         fecha : req.body.fecha,
@@ -108,7 +108,7 @@ app.post('/createtask', function(req , res){
     });
 });
 // Actualiza el estado de una tarea
-app.post('/actu', function(req,res){
+APP.post('/actu', function(req,res){
     db.Tarea.update({_id:mongoo.Types.ObjectId(req.body.id)},{$set: {estado: req.body.estado}}, function(err){
         if (err) {console.log(err);}else{
         }
@@ -116,7 +116,7 @@ app.post('/actu', function(req,res){
     });
 });
 // Elimina una tarea
-app.post('/delete', function(req,res){
+APP.post('/delete', function(req,res){
     db.Tarea.find({_id:mongoo.Types.ObjectId(req.body.id)}).remove(function(err){
         if (err) {console.log(err);}
         else{res.send("1dd");}

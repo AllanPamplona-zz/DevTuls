@@ -1,11 +1,11 @@
-var urlG = "localhost:3030"
+var URL_GLOBAL = "localhost:3030"
 $("#selectorid").click(function(){
     var data = $('#listaselector option:selected').val();
     if(data=="disable"){
         return
     }
     $.ajax({
-        url: 'http://'+urlG+'/seleccionado',
+        url: 'http://'+URL_GLOBAL+'/seleccionado',
         data: {dato:data},
         method: 'POST'
     }).then(function(data){
@@ -22,22 +22,22 @@ $("#close").click(function(){
 $("#añadir").click(function(){
     var pertenece = $("#coleccion li");
     var nombre = $('#nombre').val();
-    var pertearray = []
+    var perte_array = []
     if(nombre.length == 0){
         alert("Debe ingresar un nombre")
     }
     else{
         pertenece.each(function(idx,li){
-            pertearray.push($(li).attr('value'))
+            perte_array.push($(li).attr('value'))
         });
         $.ajax({
-            url:'http://'+urlG+'/agregarproyecto',
-            data: {nombre:nombre, pertenece:pertearray,kan:"0"},
+            url:'http://'+URL_GLOBAL+'/agregarproyecto',
+            data: {nombre:nombre, pertenece:perte_array,kan:"0"},
             method:'POST'
         }).then(function(data){
             if(data.resultado=="1"){
                 alert("Se guardo con exito")
-                $('#modal1').modal('close');    
+                $('#modal1').modal('close');
                 $("#coleccion").empty();
                 $("#nombre").val('');
                 $("#email").val('');
@@ -57,7 +57,7 @@ $("#agregar").click(function(){
         return
     }
     $.ajax({
-        url: 'http://'+urlG+'/validaremail',
+        url: 'http://'+URL_GLOBAL+'/validaremail',
         data: {email:data},
         method: 'POST'
     }).then(function(data){
